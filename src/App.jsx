@@ -117,6 +117,15 @@ const App = () => {
           will-change: transform;
         }
 
+        @keyframes fade-in {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+
+        .animate-fade-in {
+          animation: fade-in 0.4s ease-out forwards;
+        }
+
         ::-webkit-scrollbar {
           display: none;
         }
@@ -125,14 +134,17 @@ const App = () => {
       {/* Главный контейнер (Сайт-постер) */}
       <div className="relative w-full h-[100dvh] max-w-md sm:h-[90dvh] sm:rounded-[2.5rem] sm:border sm:border-white/10 sm:shadow-[0_0_80px_rgba(255,255,255,0.05)] overflow-hidden bg-[#050505]">
         
-        {/* ФОНОВОЕ ФОТО С АНИМАЦИЕЙ */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden">
+        {/* ФОНОВОЕ ФОТО С АНИМАЦИЕЙ И ПЛАВНЫМ ПЕРЕХОДОМ */}
+        <div key={`bg-${theme}`} className="absolute inset-0 w-full h-full overflow-hidden animate-fade-in">
           <img 
             src={{
               glass: 'photo-glass.jpg',
               infinite: 'photo-infinite.jpg',
               cinema: 'photo-cinema.jpg',
-              air: 'photo-air.jpg'
+              air: 'photo-air.jpg',
+              aura: 'photo-aura.jpg',
+              bento: 'photo-bento.jpg',
+              flare: 'photo-flare.jpg'
             }[theme]} 
             alt="Elena Sotnikova" 
             className="w-full h-full object-cover object-[center_15%] animate-ken-burns opacity-90"
@@ -153,17 +165,20 @@ const App = () => {
           </button>
           
           <div className={`absolute top-full mt-2 flex flex-col gap-1 bg-black/80 backdrop-blur-xl border border-white/20 rounded-2xl p-2 shadow-2xl transition-all duration-300 origin-top ${showThemeSwitcher ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}`}>
-            {['glass', 'infinite', 'cinema', 'air'].map((t) => (
+            {['glass', 'infinite', 'cinema', 'air', 'aura', 'bento', 'flare'].map((t) => (
               <button 
                 key={t}
                 onClick={() => { setTheme(t); setShowThemeSwitcher(false); }} 
-                className={`px-6 py-2.5 rounded-xl text-[10px] font-sans-lux font-medium tracking-widest uppercase transition-all duration-300 whitespace-nowrap ${theme === t ? 'bg-white text-black shadow-md' : 'text-white/50 hover:text-white hover:bg-white/10'}`}
+                className={`px-4 py-2 text-left rounded-xl text-[10px] font-sans-lux font-medium tracking-widest uppercase transition-all duration-300 ${theme === t ? 'bg-white text-black' : 'text-white/70 hover:text-white hover:bg-white/10'}`}
               >
                 {t}
               </button>
             ))}
           </div>
         </div>
+
+        {/* ОБЕРТКА ДЛЯ СМЕНЫ ТЕМ БЕЗ АНИМАЦИИ (ЧТОБЫ НЕ БЫЛО ГЛИТЧА СТЕКЛА) */}
+        <div className="absolute inset-0 z-10 w-full h-full pointer-events-none [&>*]:pointer-events-auto">
 
         {/* =========================================
             ШАБЛОН 1: GLASS
@@ -213,16 +228,16 @@ const App = () => {
             </div>
 
             {/* НИЖНЯЯ ПАНЕЛЬ - Glass Style */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 z-20">
-              <div className="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-3xl shadow-lg flex flex-col items-center text-center relative overflow-hidden">
+            <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6 z-20">
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 p-4 sm:p-5 rounded-[1.5rem] sm:rounded-3xl shadow-lg flex flex-col items-center text-center relative overflow-hidden">
                 <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                <p className="font-sans-lux text-[9px] tracking-[0.3em] uppercase text-white/60 mb-2 font-light">
+                <p className="font-sans-lux text-[8px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] uppercase text-white/60 mb-2 font-light">
                   {t.sphere}
                 </p>
-                <h1 className="font-serif-lux text-2xl sm:text-3xl font-normal text-white mb-2 tracking-wide leading-none">
+                <h1 className="font-serif-lux text-[22px] sm:text-3xl font-normal text-white mb-1.5 sm:mb-2 tracking-wide leading-none">
                   {t.name}
                 </h1>
-                <p className="font-serif-lux italic text-[14px] text-white/70 mb-5 font-light">
+                <p className="font-serif-lux italic text-[13px] sm:text-[14px] text-white/70 mb-4 sm:mb-5 font-light">
                   {t.quote}
                 </p>
                 
@@ -277,10 +292,10 @@ const App = () => {
                 <button onClick={() => setShowQR(true)} className="w-10 h-10 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all active:scale-95"><QrCode className="w-5 h-5 font-light" strokeWidth={1.5} /></button>
               </div>
             </div>
-            <div className="absolute bottom-10 right-6 left-20 z-20 flex flex-col items-end text-right">
-              <p className="font-sans-lux text-[9px] tracking-[0.3em] uppercase text-white/60 mb-2 font-light">{t.sphere}</p>
-              <h1 className="font-serif-inf text-3xl sm:text-4xl font-normal text-white mb-3 tracking-wide leading-none">{t.name}</h1>
-              <p className="font-serif-inf italic text-[15px] text-white/70 mb-2 font-light max-w-[200px]">{t.quote}</p>
+            <div className="absolute bottom-6 sm:bottom-10 right-4 sm:right-6 left-20 z-20 flex flex-col items-end text-right">
+              <p className="font-sans-lux text-[8px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] uppercase text-white/60 mb-2 font-light">{t.sphere}</p>
+              <h1 className="font-serif-inf text-2xl sm:text-4xl font-normal text-white mb-2 sm:mb-3 tracking-wide leading-none">{t.name}</h1>
+              <p className="font-serif-inf italic text-[13px] sm:text-[15px] text-white/70 mb-2 font-light max-w-[200px]">{t.quote}</p>
             </div>
           </>
         )}
@@ -291,14 +306,22 @@ const App = () => {
         {theme === 'cinema' && (
           <>
             {/* Верхняя черная кино-полоса */}
-            <div className="absolute top-0 left-0 right-0 h-[15%] min-h-[100px] bg-[#050505] z-20 flex justify-between items-center px-6 border-b border-white/10 shadow-2xl">
-              <div className="flex gap-4">
-                <button onClick={() => setShowQR(true)} className="text-white/50 hover:text-white hover:scale-110 transition-all"><QrCode className="w-6 h-6 font-light" strokeWidth={1.5} /></button>
-                <button onClick={handleDownloadVCF} className="text-white/50 hover:text-white hover:scale-110 transition-all"><UserPlus className="w-6 h-6 font-light" strokeWidth={1.5} /></button>
+            <div className="absolute top-0 left-0 right-0 h-[15%] min-h-[85px] sm:min-h-[100px] bg-[#050505] z-20 flex justify-between items-end pb-4 sm:pb-5 px-6 border-b border-white/10 shadow-2xl overflow-hidden">
+              
+              {/* Перфорация кинопленки (верхняя) */}
+              <div className="absolute top-3 left-0 right-0 flex justify-between px-4 pointer-events-none opacity-40">
+                {Array.from({length: 18}).map((_, i) => (
+                  <div key={i} className="w-1.5 h-2.5 rounded-[2px] bg-white/20 shadow-[inset_0_0_2px_rgba(0,0,0,0.8)]"></div>
+                ))}
               </div>
-              <div className="flex gap-3">
+
+              <div className="flex gap-3 z-10">
+                <button onClick={() => setShowQR(true)} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all shadow-lg backdrop-blur-sm"><QrCode className="w-5 h-5 font-light" strokeWidth={1.5} /></button>
+                <button onClick={handleDownloadVCF} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all shadow-lg backdrop-blur-sm"><UserPlus className="w-5 h-5 font-light" strokeWidth={1.5} /></button>
+              </div>
+              <div className="flex bg-white/5 p-1 rounded-full border border-white/10 z-10 backdrop-blur-sm">
                 {['hy', 'ru', 'en'].map((l) => (
-                  <button key={l} onClick={() => setLang(l)} className={`text-[10px] font-sans-cin font-bold tracking-widest uppercase transition-all duration-300 ${lang === l ? 'text-white' : 'text-white/30 hover:text-white/70'}`}>
+                  <button key={l} onClick={() => setLang(l)} className={`w-8 h-8 rounded-full flex items-center justify-center text-[9px] font-sans-cin font-bold tracking-widest uppercase transition-all duration-300 ${lang === l ? 'bg-white text-black shadow-md' : 'text-white/50 hover:text-white'}`}>
                     {l === 'hy' ? 'AM' : l}
                   </button>
                 ))}
@@ -307,17 +330,25 @@ const App = () => {
 
             {/* Титры сдвинуты вниз, чтобы не перекрывать лицо */}
             <div className="absolute bottom-[18%] left-0 right-0 flex flex-col items-center justify-center z-10 pointer-events-none px-6 text-center">
-              <p className="font-sans-cin text-[10px] tracking-[0.4em] uppercase text-white/80 mb-3 font-light drop-shadow-lg">{t.sphere}</p>
-              <h1 className="font-serif-cin text-3xl text-white mb-3 tracking-widest drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] font-semibold">{t.name}</h1>
-              <p className="font-serif-cin italic text-[15px] text-white/90 font-light drop-shadow-lg">{t.quote}</p>
+              <p className="font-sans-cin text-[9px] sm:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] uppercase text-white/80 mb-2 sm:mb-3 font-light drop-shadow-lg">{t.sphere}</p>
+              <h1 className="font-serif-cin text-2xl sm:text-3xl text-white mb-2 sm:mb-3 tracking-widest drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] font-semibold">{t.name}</h1>
+              <p className="font-serif-cin italic text-[13px] sm:text-[15px] text-white/90 font-light drop-shadow-lg">{t.quote}</p>
             </div>
 
             {/* Нижняя черная кино-полоса */}
-            <div className="absolute bottom-0 left-0 right-0 h-[15%] min-h-[100px] bg-[#050505] z-20 flex items-center justify-center gap-8 border-t border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
-              <a href={`https://t.me/${SOCIAL_LINKS.telegram}`} target="_blank" rel="noreferrer" className="text-white/50 hover:text-white hover:-translate-y-1 transition-all"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
-              <a href={`https://instagram.com/${SOCIAL_LINKS.instagram}`} target="_blank" rel="noreferrer" className="text-white/50 hover:text-white hover:-translate-y-1 transition-all"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
-              <a href={`https://wa.me/${SOCIAL_LINKS.whatsapp}`} target="_blank" rel="noreferrer" className="text-white/50 hover:text-white hover:-translate-y-1 transition-all"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></a>
-              <a href={`tel:${SOCIAL_LINKS.phone}`} className="text-white/50 hover:text-white hover:-translate-y-1 transition-all"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+            <div className="absolute bottom-0 left-0 right-0 h-[15%] min-h-[85px] sm:min-h-[100px] bg-[#050505] z-20 flex items-start justify-center pt-4 sm:pt-5 gap-4 sm:gap-8 border-t border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
+              
+              {/* Перфорация кинопленки (нижняя) */}
+              <div className="absolute bottom-3 left-0 right-0 flex justify-between px-4 pointer-events-none opacity-40">
+                {Array.from({length: 18}).map((_, i) => (
+                  <div key={i} className="w-1.5 h-2.5 rounded-[2px] bg-white/20 shadow-[inset_0_0_2px_rgba(0,0,0,0.8)]"></div>
+                ))}
+              </div>
+
+              <a href={`https://t.me/${SOCIAL_LINKS.telegram}`} target="_blank" rel="noreferrer" className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 hover:-translate-y-1 transition-all shadow-lg z-10 backdrop-blur-sm"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+              <a href={`https://instagram.com/${SOCIAL_LINKS.instagram}`} target="_blank" rel="noreferrer" className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 hover:-translate-y-1 transition-all shadow-lg z-10 backdrop-blur-sm"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+              <a href={`https://wa.me/${SOCIAL_LINKS.whatsapp}`} target="_blank" rel="noreferrer" className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 hover:-translate-y-1 transition-all shadow-lg z-10 backdrop-blur-sm"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></a>
+              <a href={`tel:${SOCIAL_LINKS.phone}`} className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 hover:-translate-y-1 transition-all shadow-lg z-10 backdrop-blur-sm"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
             </div>
           </>
         )}
@@ -346,18 +377,18 @@ const App = () => {
             </div>
 
             {/* Асимметричный блок текста (Стиль Vogue) */}
-            <div className="absolute bottom-12 left-6 right-20 z-20 pointer-events-none">
-              <div className="w-12 h-[1px] bg-white/50 mb-6"></div>
-              <h1 className="font-serif-air text-3xl sm:text-4xl text-white mb-2 leading-[0.9] drop-shadow-2xl tracking-tight">
+            <div className="absolute bottom-8 sm:bottom-12 left-6 right-16 sm:right-20 z-20 pointer-events-none">
+              <div className="w-10 sm:w-12 h-[1px] bg-white/50 mb-4 sm:mb-6"></div>
+              <h1 className="font-serif-air text-[26px] sm:text-4xl text-white mb-2 leading-[0.95] sm:leading-[0.9] drop-shadow-2xl tracking-tight">
                 {t.name.split(' ')[0]}<br/>
                 <span className="italic text-white/90">{t.name.split(' ').slice(1).join(' ')}</span>
               </h1>
-              <p className="font-sans-air text-[9px] tracking-[0.4em] uppercase text-white/80 mt-6 mb-3 drop-shadow-md">{t.sphere}</p>
-              <p className="font-serif-air italic text-[14px] text-white/90 drop-shadow-md">{t.quote}</p>
+              <p className="font-sans-air text-[8px] sm:text-[9px] tracking-[0.3em] sm:tracking-[0.4em] uppercase text-white/80 mt-4 sm:mt-6 mb-2 sm:mb-3 drop-shadow-md">{t.sphere}</p>
+              <p className="font-serif-air italic text-[13px] sm:text-[14px] text-white/90 drop-shadow-md">{t.quote}</p>
             </div>
 
             {/* Выезжающий блок соцсетей справа */}
-            <div className={`absolute bottom-12 right-0 flex flex-col gap-3 z-20 transition-transform duration-500 ${isAirSocialOpen ? '-translate-x-6' : 'translate-x-[calc(100%)]'}`}>
+            <div className={`absolute bottom-8 sm:bottom-12 right-0 flex flex-col gap-2 sm:gap-3 z-20 transition-transform duration-500 ${isAirSocialOpen ? '-translate-x-4 sm:-translate-x-6' : 'translate-x-[calc(100%)]'}`}>
               
               {/* Хвостик (кнопка открытия) */}
               <button 
@@ -375,18 +406,145 @@ const App = () => {
           </>
         )}
 
+        {/* =========================================
+            ШАБЛОН 5: AURA (Органика, цветовой акцент)
+            ========================================= */}
+        {theme === 'aura' && (
+          <>
+            {/* Мягкое атмосферное свечение на фоне */}
+            <div className="absolute -bottom-20 -left-20 w-[150%] h-[60%] bg-gradient-to-tr from-rose-900/40 via-indigo-900/30 to-transparent blur-3xl z-0 pointer-events-none rounded-[100%]"></div>
+
+            <div className="absolute top-6 left-6 right-6 flex justify-between items-start z-20">
+              <div className="flex gap-2">
+                <button onClick={() => setShowQR(true)} className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-2xl border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all shadow-xl"><QrCode className="w-4 h-4 font-light" strokeWidth={1.5} /></button>
+                <button onClick={handleDownloadVCF} className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-2xl border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-all shadow-xl"><UserPlus className="w-4 h-4 font-light" strokeWidth={1.5} /></button>
+              </div>
+              <div className="flex gap-2 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-full p-1 shadow-xl">
+                {['hy', 'ru', 'en'].map((l) => (
+                  <button key={l} onClick={() => setLang(l)} className={`w-8 h-8 rounded-full flex items-center justify-center text-[9px] font-sans-lux font-bold tracking-widest uppercase transition-all duration-300 ${lang === l ? 'bg-white/90 text-indigo-950' : 'text-white/70 hover:text-white'}`}>
+                    {l === 'hy' ? 'AM' : l}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="absolute bottom-6 sm:bottom-8 left-6 right-6 z-20">
+              <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl border border-white/20 rounded-[2rem] p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+                <p className="font-sans-lux text-[8px] sm:text-[9px] tracking-[0.3em] uppercase text-white/70 mb-2 font-light">{t.sphere}</p>
+                <h1 className="font-serif-lux text-[26px] sm:text-3xl text-white mb-2 tracking-wide leading-tight">{t.name}</h1>
+                <p className="font-serif-lux italic text-[14px] text-white/80 mb-6 font-light">{t.quote}</p>
+                
+                <div className="flex justify-between items-center gap-2">
+                  <a href={`https://t.me/${SOCIAL_LINKS.telegram}`} target="_blank" rel="noreferrer" className="flex-1 py-3.5 rounded-2xl bg-white/5 border border-white/10 flex justify-center text-white/80 hover:text-white hover:bg-white/15 transition-all shadow-sm hover:-translate-y-1"><svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+                  <a href={`https://instagram.com/${SOCIAL_LINKS.instagram}`} target="_blank" rel="noreferrer" className="flex-1 py-3.5 rounded-2xl bg-white/5 border border-white/10 flex justify-center text-white/80 hover:text-white hover:bg-white/15 transition-all shadow-sm hover:-translate-y-1"><svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+                  <a href={`https://wa.me/${SOCIAL_LINKS.whatsapp}`} target="_blank" rel="noreferrer" className="flex-1 py-3.5 rounded-2xl bg-white/5 border border-white/10 flex justify-center text-white/80 hover:text-white hover:bg-white/15 transition-all shadow-sm hover:-translate-y-1"><svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></a>
+                  <a href={`tel:${SOCIAL_LINKS.phone}`} className="flex-1 py-3.5 rounded-2xl bg-white/5 border border-white/10 flex justify-center text-white/80 hover:text-white hover:bg-white/15 transition-all shadow-sm hover:-translate-y-1"><svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* =========================================
+            ШАБЛОН 6: BENTO (Современная сетка виджетов)
+            ========================================= */}
+        {theme === 'bento' && (
+          <>
+             <div className="absolute top-6 right-6 z-20">
+                <div className="flex bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-1 shadow-2xl">
+                  {['hy', 'ru', 'en'].map((l) => (
+                    <button key={l} onClick={() => setLang(l)} className={`w-8 h-8 rounded-xl flex items-center justify-center text-[9px] font-sans-lux font-bold tracking-widest uppercase transition-all duration-300 ${lang === l ? 'bg-white text-black shadow-md' : 'text-white/50 hover:text-white'}`}>
+                      {l === 'hy' ? 'AM' : l}
+                    </button>
+                  ))}
+                </div>
+             </div>
+
+             <div className="absolute bottom-6 sm:bottom-8 left-6 right-6 z-20 grid grid-cols-4 gap-2 sm:gap-3">
+                {/* Main Info */}
+                <div className="col-span-4 bg-black/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-6 shadow-2xl">
+                  <p className="font-sans-lux text-[8px] sm:text-[9px] tracking-[0.3em] uppercase text-white/60 mb-2">{t.sphere}</p>
+                  <h1 className="font-serif-lux text-2xl sm:text-3xl text-white mb-2">{t.name}</h1>
+                  <p className="font-serif-lux italic text-[13px] text-white/70">{t.quote}</p>
+                </div>
+                
+                {/* Socials */}
+                <div className="col-span-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] p-4 flex items-center justify-around shadow-2xl">
+                  <a href={`https://t.me/${SOCIAL_LINKS.telegram}`} target="_blank" rel="noreferrer" className="text-white/60 hover:text-white hover:scale-110 transition-all"><svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+                  <a href={`https://instagram.com/${SOCIAL_LINKS.instagram}`} target="_blank" rel="noreferrer" className="text-white/60 hover:text-white hover:scale-110 transition-all"><svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+                  <a href={`https://wa.me/${SOCIAL_LINKS.whatsapp}`} target="_blank" rel="noreferrer" className="text-white/60 hover:text-white hover:scale-110 transition-all"><svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></a>
+                  <a href={`tel:${SOCIAL_LINKS.phone}`} className="text-white/60 hover:text-white hover:scale-110 transition-all"><svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+                </div>
+
+                {/* QR */}
+                <button onClick={() => setShowQR(true)} className="col-span-1 aspect-square bg-black/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all shadow-2xl active:scale-95">
+                   <QrCode className="w-5 h-5 sm:w-6 sm:h-6 font-light" strokeWidth={1.5} />
+                </button>
+                
+                {/* VCF */}
+                <button onClick={handleDownloadVCF} className="col-span-1 aspect-square bg-black/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all shadow-2xl active:scale-95" title={t.saveBtn}>
+                   <UserPlus className="w-5 h-5 sm:w-6 sm:h-6 font-light" strokeWidth={1.5} />
+                </button>
+             </div>
+          </>
+        )}
+
+        {/* =========================================
+            ШАБЛОН 7: FLARE (Кибер-роскошь / Fluid Art)
+            ========================================= */}
+        {theme === 'flare' && (
+          <>
+            <div className="absolute top-6 left-6 right-6 flex justify-between items-start z-20">
+              <div className="flex gap-3">
+                <button onClick={() => setShowQR(true)} className="w-10 h-10 bg-black/60 backdrop-blur-xl border border-orange-500/30 rounded-tl-sm rounded-tr-xl rounded-br-xl rounded-bl-xl flex items-center justify-center text-white/80 hover:text-white hover:border-orange-500/60 hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all"><QrCode className="w-5 h-5 font-light" strokeWidth={1.5} /></button>
+                <button onClick={handleDownloadVCF} className="w-10 h-10 bg-black/60 backdrop-blur-xl border border-orange-500/30 rounded-tl-xl rounded-tr-sm rounded-br-xl rounded-bl-xl flex items-center justify-center text-white/80 hover:text-white hover:border-orange-500/60 hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all"><UserPlus className="w-5 h-5 font-light" strokeWidth={1.5} /></button>
+              </div>
+              <div className="flex bg-black/60 backdrop-blur-xl border border-red-500/30 p-1 rounded-tl-xl rounded-tr-xl rounded-br-sm rounded-bl-xl shadow-[0_0_20px_rgba(239,68,68,0.15)]">
+                {['hy', 'ru', 'en'].map((l) => (
+                  <button key={l} onClick={() => setLang(l)} className={`w-8 h-8 rounded-lg flex items-center justify-center text-[9px] font-sans-lux font-bold tracking-widest uppercase transition-all duration-300 ${lang === l ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-[0_0_10px_rgba(239,68,68,0.4)]' : 'text-white/50 hover:text-white'}`}>
+                    {l === 'hy' ? 'AM' : l}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="absolute bottom-6 sm:bottom-8 left-6 right-6 z-20">
+              <div className="bg-black/70 backdrop-blur-xl border-t border-r border-red-500/30 rounded-tl-[2.5rem] rounded-tr-sm rounded-br-[2.5rem] rounded-bl-[2.5rem] p-6 sm:p-8 shadow-[10px_-10px_30px_rgba(239,68,68,0.15)] relative overflow-hidden">
+                <p className="font-sans-lux text-[8px] sm:text-[9px] tracking-[0.3em] uppercase text-orange-400 mb-2 font-medium">{t.sphere}</p>
+                
+                {/* Градиентный текст для имени */}
+                <h1 className="font-serif-lux text-[26px] sm:text-3xl font-bold bg-gradient-to-r from-red-500 via-orange-400 to-yellow-500 text-transparent bg-clip-text mb-2 tracking-wide leading-tight drop-shadow-md">
+                  {t.name}
+                </h1>
+                
+                <p className="font-serif-lux italic text-[14px] text-white/70 mb-6 font-light">{t.quote}</p>
+                
+                <div className="flex justify-between items-center gap-3">
+                  <a href={`https://t.me/${SOCIAL_LINKS.telegram}`} target="_blank" rel="noreferrer" className="flex-1 py-3 rounded-tl-xl rounded-tr-sm rounded-br-xl rounded-bl-xl bg-white/5 border border-red-500/20 flex justify-center text-white/80 hover:text-white hover:border-orange-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all hover:-translate-y-1"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+                  <a href={`https://instagram.com/${SOCIAL_LINKS.instagram}`} target="_blank" rel="noreferrer" className="flex-1 py-3 rounded-tl-xl rounded-tr-sm rounded-br-xl rounded-bl-xl bg-white/5 border border-red-500/20 flex justify-center text-white/80 hover:text-white hover:border-orange-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all hover:-translate-y-1"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+                  <a href={`https://wa.me/${SOCIAL_LINKS.whatsapp}`} target="_blank" rel="noreferrer" className="flex-1 py-3 rounded-tl-xl rounded-tr-sm rounded-br-xl rounded-bl-xl bg-white/5 border border-red-500/20 flex justify-center text-white/80 hover:text-white hover:border-orange-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all hover:-translate-y-1"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></a>
+                  <a href={`tel:${SOCIAL_LINKS.phone}`} className="flex-1 py-3 rounded-tl-xl rounded-tr-sm rounded-br-xl rounded-bl-xl bg-white/5 border border-red-500/20 flex justify-center text-white/80 hover:text-white hover:border-orange-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all hover:-translate-y-1"><svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        </div>
+
         {/* MODAL: QR CODE */}
         <div 
-          className={`absolute inset-0 z-50 flex items-center justify-center p-6 transition-all duration-500 bg-black/80 backdrop-blur-xl ${
+          className={`absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-500 bg-black/80 backdrop-blur-xl ${
             showQR ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         >
           <div 
-            className={`w-full max-w-[280px] bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col items-center transition-all duration-500 transform ${
+            className={`w-full max-w-[260px] sm:max-w-[280px] bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 flex flex-col items-center transition-all duration-500 transform ${
               showQR ? 'scale-100 translate-y-0' : 'scale-95 translate-y-8'
             }`}
           >
-            <div className="w-full bg-white p-4 rounded-2xl mb-6 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+            <div className="w-full bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl mb-5 sm:mb-6 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
               <img 
                 src="qr-code.png" 
                 alt="QR Code" 
@@ -394,13 +552,13 @@ const App = () => {
               />
             </div>
             
-            <p className="font-sans-lux text-white/60 text-xs tracking-widest uppercase mb-8 text-center font-light">
+            <p className="font-sans-lux text-white/60 text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-widest uppercase mb-6 sm:mb-8 text-center font-light">
               {t.scan}
             </p>
 
             <button 
               onClick={() => setShowQR(false)}
-              className="w-full py-3 rounded-xl border border-white/20 text-white/80 hover:text-white hover:bg-white/10 transition-colors font-sans-lux text-[10px] tracking-widest uppercase active:scale-95"
+              className="w-full py-2.5 sm:py-3 rounded-lg sm:rounded-xl border border-white/20 text-white/80 hover:text-white hover:bg-white/10 transition-colors font-sans-lux text-[9px] sm:text-[10px] tracking-widest uppercase active:scale-95"
             >
               {t.close}
             </button>
